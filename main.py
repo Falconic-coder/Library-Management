@@ -5,9 +5,12 @@ from db import database
 from tkinter import ttk
 
 
+
 class Library:
     width = 0
     height = 0
+    winPos = []
+
 
     def __init__(self, master):
         self.master = master
@@ -15,13 +18,15 @@ class Library:
         self.bg = Image.open("images\\books.jpg")
         self.bg = ImageTk.PhotoImage(self.bg)
         self.width = self.bg.width()
-        self.height = self.bg.height()
+        self.height = int(self.bg.height() / 1.3)
 
         self.cavas = tk.Canvas(self.master, width=self.width, height=self.height)
         self.cavas.pack(fill=tk.BOTH, expand=True)
         self.cavas.create_image(0, 0, image=self.bg, anchor="nw")
 
         self.home()
+        self.center_window()
+
 
     def home(self):
         self.headingFrame = tk.Frame(self.master, bg="lightpink", bd=5)
@@ -257,11 +262,20 @@ class Library:
         else:
             return True
 
+    def center_window(self):
+        screenWidth = self.cavas.winfo_screenwidth()
+        screenHeight = self.cavas.winfo_screenheight()
+        posTop = int(screenHeight/2 - self.height/2)
+        posLeft = int(screenWidth/2 - self.width/2)
+        self.winPos.append(posTop)
+        self.winPos.append(posLeft)
+
+
 
 if __name__ == "__main__":
     win = tk.Tk()
     win.title("Library")
     lib = Library(win)
-    win.geometry(f"{lib.width}x{lib.height}")
+    win.geometry(f"{lib.width}x{lib.height}+{lib.winPos[0]}+{lib.winPos[1]}")
     win.resizable(width=False, height=False)
     win.mainloop()
